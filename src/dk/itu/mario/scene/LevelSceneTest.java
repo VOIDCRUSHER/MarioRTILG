@@ -69,8 +69,8 @@ import dk.itu.mario.res.ResourcesManager;
 		        		String detailedInfo = FileHandler.readFile("DetailedInfo.txt");
 		                
 		              }
-			        	else
-		        		currentLevel = new RandomLevel(320, 15, levelSeed, levelDifficulty,levelType);
+			        	else{
+		        		currentLevel = new RandomLevel(320, 15, levelSeed, levelDifficulty,levelType); System.out.println("FUCK ME");}
 
 		        try {
 					 level = currentLevel.clone();
@@ -119,7 +119,7 @@ import dk.itu.mario.res.ResourcesManager;
 		    	double startX = 32; //mario start position
 		    	double endX = level.getxExit()*squareSize; //position of the end on the level
 		    	if(!isCustom && recorder==null)
-		    		recorder = new DataRecorder(this,(RandomLevel)level,keys);
+		    		recorder = new DataRecorder(this,level,keys);
 
 		        gameStarted = false;
 			}
@@ -128,7 +128,6 @@ import dk.itu.mario.res.ResourcesManager;
 
 			public void tick(){
 				super.tick();
-
 				if(recorder != null && !gameStarted){
 					recorder.startLittleRecord();
 					recorder.startTime();
@@ -140,7 +139,7 @@ import dk.itu.mario.res.ResourcesManager;
 
 			public void winActions(){
 				if(recorder != null)
-				recorder.fillGamePlayMetrics((RandomLevel)level);
+				recorder.fillGamePlayMetrics(level);
 				
 				marioComponent.win();
 			}
@@ -148,7 +147,7 @@ import dk.itu.mario.res.ResourcesManager;
 			public void deathActions(){
 				if(Mario.lives <=0){//has no more lives
 					if(recorder != null)
-					recorder.fillGamePlayMetrics((RandomLevel)level);
+					recorder.fillGamePlayMetrics(level);
 					marioComponent.lose();
 				}
 				else // mario still has lives to play :)--> have a new beginning

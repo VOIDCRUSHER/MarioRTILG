@@ -114,7 +114,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
 
     }
 
-    private int buildZone(int x, int maxLength) {
+    protected int buildZone(int x, int maxLength) {
         int t = random.nextInt(totalOdds);
         int type = 0;
 
@@ -146,7 +146,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return 0;
     }
 
-    private int buildJump(int xo, int maxLength) {
+    protected int buildJump(int xo, int maxLength) {
         gaps++;
         //jl: jump length
         //js: the number of blocks that are available at either side for free
@@ -185,7 +185,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return length;
     }
 
-    private int buildCannons(int xo, int maxLength) {
+    public int buildCannons(int xo, int maxLength) {
         int length = random.nextInt(10) + 2;
         if (length > maxLength) length = maxLength;
 
@@ -218,7 +218,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return length;
     }
 
-    private int buildHillStraight(int xo, int maxLength) {
+    protected int buildHillStraight(int xo, int maxLength) {
         int length = random.nextInt(10) + 10;
         if (length > maxLength) length = maxLength;
 
@@ -283,7 +283,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return length;
     }
 
-    private void addEnemyLine(int x0, int x1, int y) {
+    public void addEnemyLine(int x0, int x1, int y) {
         for (int x = x0; x < x1; x++) {
             if (random.nextInt(50) < 25) {
                 int type = random.nextInt(4);
@@ -311,7 +311,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         }
     }
 
-    private int buildTubes(int xo, int maxLength) {
+    public int buildTubes(int xo, int maxLength) {
         int length = random.nextInt(10) + 5;
         if (length > maxLength) length = maxLength;
 
@@ -353,7 +353,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return length;
     }
 
-    private int buildStraight(int xo, int maxLength, boolean safe) {
+    protected int buildStraight(int xo, int maxLength, boolean safe) {
         int length = random.nextInt(10) + 2;
 
         if (safe)
@@ -382,7 +382,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         return length;
     }
 
-    private void decorate(int xStart, int xLength, int floor) {
+    protected void decorate(int xStart, int xLength, int floor) {
         //if its at the very top, just return
         if (floor < 1)
             return;
@@ -437,7 +437,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         }
     }
 
-    private void fixWalls() {
+    protected void fixWalls() {
         boolean[][] blockMap = new boolean[width + 1][height + 1];
 
         for (int x = 0; x < width + 1; x++) {
@@ -456,7 +456,7 @@ public class CustomizedLevel extends Level implements LevelInterface {
         blockify(this, blockMap, width + 1, height + 1);
     }
 
-    private void blockify(Level level, boolean[][] blocks, int width,
+    protected void blockify(Level level, boolean[][] blocks, int width,
                           int height) {
         int to = 0;
         if (type == LevelInterface.TYPE_CASTLE) {

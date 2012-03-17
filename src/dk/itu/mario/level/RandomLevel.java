@@ -10,17 +10,17 @@ import dk.itu.mario.engine.sprites.Enemy;
 
 public class RandomLevel extends Level{
 	//Store information about the level
-	 public   int ENEMIES = 0; //the number of enemies the level contains
-	 public   int BLOCKS_EMPTY = 0; // the number of empty blocks
-	 public   int BLOCKS_COINS = 0; // the number of coin blocks
-	 public   int BLOCKS_POWER = 0; // the number of power blocks
-	 public   int COINS = 0; //These are the coins in boxes that Mario collect
+	 //public   int ENEMIES = 0; //the number of enemies the level contains
+	 //public   int BLOCKS_EMPTY = 0; // the number of empty blocks
+	 //public   int BLOCKS_COINS = 0; // the number of coin blocks
+	 //public   int BLOCKS_POWER = 0; // the number of power blocks
+	 //public   int COINS = 0; //These are the coins in boxes that Mario collect
 
  
-	private static Random levelSeedRandom = new Random();
-	    public static long lastSeed;
+	//private static Random levelSeedRandom = new Random();
+	  //  public static long lastSeed;
 
-	    Random random;
+	    //Random random;
 
 	    private static final int ODDS_STRAIGHT = 0;
 	    private static final int ODDS_HILL_STRAIGHT = 1;
@@ -32,9 +32,9 @@ public class RandomLevel extends Level{
 	    
 	    private int totalOdds;
 	    
-	    private int difficulty;
-	    private int type;
-		private int gaps;
+	    //private int difficulty;
+	    //private int type;
+		//private int gaps;
 		
 		public RandomLevel(int width, int height)
 	    {
@@ -49,7 +49,7 @@ public class RandomLevel extends Level{
 	    }
 
 	    public void creat(long seed, int difficulty, int type)
-	    {
+	    {	System.out.println("RANDOM");
 	        this.type = type;
 	        this.difficulty = difficulty;
 	        odds[ODDS_STRAIGHT] = 20;
@@ -130,7 +130,7 @@ public class RandomLevel extends Level{
 
 	    }
 
-	    private int buildZone(int x, int maxLength)
+	    protected int buildZone(int x, int maxLength)
 	    {
 	        int t = random.nextInt(totalOdds);
 	        int type = 0;
@@ -162,7 +162,7 @@ public class RandomLevel extends Level{
 	        return 0;
 	    }
 
-	    private int buildJump(int xo, int maxLength)
+	    protected int buildJump(int xo, int maxLength)
 	    {	gaps++;
 	    	//jl: jump length
 	    	//js: the number of blocks that are available at either side for free
@@ -211,7 +211,7 @@ public class RandomLevel extends Level{
 	        return length;
 	    }
 
-	    private int buildCannons(int xo, int maxLength)
+	    public int buildCannons(int xo, int maxLength)
 	    {
 	        int length = random.nextInt(10) + 2;
 	        if (length > maxLength) length = maxLength;
@@ -257,7 +257,7 @@ public class RandomLevel extends Level{
 	        return length;
 	    }
 
-	    private int buildHillStraight(int xo, int maxLength)
+	    protected int buildHillStraight(int xo, int maxLength)
 	    {
 	        int length = random.nextInt(10) + 10;
 	        if (length > maxLength) length = maxLength;
@@ -336,7 +336,7 @@ public class RandomLevel extends Level{
 	        return length;
 	    }
 
-	    private void addEnemyLine(int x0, int x1, int y)
+	    protected void addEnemyLine(int x0, int x1, int y)
 	    {
 	        for (int x = x0; x < x1; x++)
 	        {
@@ -359,7 +359,7 @@ public class RandomLevel extends Level{
 	        }
 	    }
 
-	    private int buildTubes(int xo, int maxLength)
+	    protected int buildTubes(int xo, int maxLength)
 	    {
 	        int length = random.nextInt(10) + 5;
 	        if (length > maxLength) length = maxLength;
@@ -413,7 +413,7 @@ public class RandomLevel extends Level{
 	        return length;
 	    }
 
-	    private int buildStraight(int xo, int maxLength, boolean safe)
+	    protected int buildStraight(int xo, int maxLength, boolean safe)
 	    {
 	        int length = random.nextInt(10) + 2;
 
@@ -448,7 +448,7 @@ public class RandomLevel extends Level{
 	        return length;
 	    }
 
-	    private void decorate(int xStart, int xLength, int floor)
+	    protected void decorate(int xStart, int xLength, int floor)
 	    {
 	    	//if its at the very top, just return
 	        if (floor < 1)
@@ -519,7 +519,7 @@ public class RandomLevel extends Level{
 	        }
 	    }
 
-	    private void fixWalls()
+	    protected void fixWalls()
 	    {
 	        boolean[][] blockMap = new boolean[width + 1][height + 1];
 
@@ -543,7 +543,7 @@ public class RandomLevel extends Level{
 	        blockify(this, blockMap, width + 1, height + 1);
 	    }
 
-	    private void blockify(Level level, boolean[][] blocks, int width, int height){
+	    protected void blockify(Level level, boolean[][] blocks, int width, int height){
 	        int to = 0;
 	        if (type == LevelInterface.TYPE_CASTLE)
 	        {

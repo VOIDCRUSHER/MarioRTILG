@@ -20,7 +20,7 @@ import dk.itu.mario.engine.sprites.FlowerEnemy;
 public class DataRecorder {
 
 	public boolean recording = true;
-	private RandomLevel level;
+	private Level level;
 	private boolean []keys, keyPressed;
 	private LevelScene levelScene;
 
@@ -109,7 +109,7 @@ public class DataRecorder {
 		return detailedLog;
 	}
 	
-	public DataRecorder(LevelScene levelScene, RandomLevel level, boolean []keys){
+	public DataRecorder(LevelScene levelScene, Level level, boolean []keys){
 		this.levelScene = levelScene;
 		this.level = level;
 		this.keys = keys;
@@ -786,7 +786,7 @@ public class DataRecorder {
 		System.out.print("\n");
 	}
 
-	public void fillGamePlayMetrics(RandomLevel level){
+	public void fillGamePlayMetrics(Level level){
         GamePlay gpm = new GamePlay();
 		gpm.completionTime = getCompletionTime();
 		gpm.totalTime = getTotalTime();////sums all the time, including from previous games if player died

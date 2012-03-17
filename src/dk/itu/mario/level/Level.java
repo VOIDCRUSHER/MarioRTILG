@@ -1,8 +1,11 @@
 package dk.itu.mario.level;
 
 import java.io.*;
+import java.util.Random;
 
+import dk.itu.mario.MarioInterface.Constraints;
 import dk.itu.mario.MarioInterface.LevelInterface;
+import dk.itu.mario.engine.sprites.Enemy;
 import dk.itu.mario.engine.sprites.SpriteTemplate;
 
 
@@ -53,6 +56,25 @@ public class Level implements LevelInterface
     //These are the place of the end of the level
     protected int xExit;
     protected int yExit;
+    
+    
+    //PREVIOUSLY ONLY IN SUBCLASSES
+  //Store information about the level
+  	 public   int ENEMIES = 0; //the number of enemies the level contains
+  	 public   int BLOCKS_EMPTY = 0; // the number of empty blocks
+  	 public   int BLOCKS_COINS = 0; // the number of coin blocks
+  	 public   int BLOCKS_POWER = 0; // the number of power blocks
+  	 public   int COINS = 0; //These are the coins in boxes that Mario collect
+  	 
+  	protected static Random levelSeedRandom = new Random();
+    public static long lastSeed;
+
+    Random random;
+
+
+    protected int difficulty;
+    protected int type;
+	protected int gaps;
 
     public Level(){
 
@@ -62,7 +84,7 @@ public class Level implements LevelInterface
     {
         this.width = width;
         this.height = height;
-
+        
         xExit = 10;
         yExit = 10;
         map = new byte[width][height];
@@ -211,6 +233,64 @@ public class Level implements LevelInterface
 		// TODO Auto-generated method stub
 		return "";
 	}
+	
+	//ADDED LATER TO FIX OOP ISSUES
 
+	public void creat(long seed, int difficulty, int type)
+    {	
+    }
+
+    protected int buildZone(int x, int maxLength)
+    {
+        return 0;
+    }
+
+    protected int buildJump(int xo, int maxLength)
+    {	
+        return 0;
+    }
+
+    public int buildCannons(int xo, int maxLength)
+    {
+        return 0;
+    }
+
+    protected int buildHillStraight(int xo, int maxLength)
+    {
+        return 0;
+    }
+
+    protected void addEnemyLine(int x0, int x1, int y)
+    {
+
+    }
+
+    protected int buildTubes(int xo, int maxLength)
+    {
+        return 0;
+    }
+
+    protected int buildStraight(int xo, int maxLength, boolean safe)
+    {
+        return 0;
+    }
+
+    protected void decorate(int xStart, int xLength, int floor)
+    {
+    	
+    }
+
+    protected void fixWalls()
+    {
+       
+    }
+
+    protected void blockify(Level level, boolean[][] blocks, int width, int height){
+        
+    }
+    
+    
+
+	
 
 }
