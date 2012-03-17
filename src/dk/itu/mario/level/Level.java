@@ -27,7 +27,7 @@ public class Level implements LevelInterface
     protected static final byte LEFT_POCKET_GRASS = (byte) (3+9*16);
     protected static final byte RIGHT_POCKET_GRASS = (byte) (3+8*16);
 
-    protected static final byte HILL_FILL = (byte) (5 + 9 * 16);
+    public static final byte HILL_FILL = (byte) (5 + 9 * 16);
     protected static final byte HILL_LEFT = (byte) (4 + 9 * 16);
     protected static final byte HILL_RIGHT = (byte) (6 + 9 * 16);
     protected static final byte HILL_TOP = (byte) (5 + 8 * 16);
