@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-//import dk.itu.mario.PlayerCharacteristics;
+import dk.itu.mario.PlayerCharacteristics;
 import dk.itu.mario.level.BgLevelGenerator;
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.engine.sonar.FixedSoundSource;
@@ -121,7 +121,7 @@ import dk.itu.mario.res.ResourcesManager;
 		    	double endX = level.getxExit()*squareSize; //position of the end on the level
 		    	if(isCustom && recorder==null){
 		    		recorder = new DataRecorder(this,level,keys);
-		    		//PlayerCharacteristics.setDR(recorder);
+		    		PlayerCharacteristics.setDR(recorder);
 		    	}
 		        gameStarted = false;
 			}
