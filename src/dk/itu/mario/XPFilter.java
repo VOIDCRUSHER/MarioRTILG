@@ -12,7 +12,11 @@ public class XPFilter {
 	private Matrix R; // measurement uncertainty
 	private Matrix I; // identity matrix
 	//filter(x,P)
-	public XPFilter(){}
+	public XPFilter(){
+		//Assume 4x4 
+		//R = Matrix()
+		I = Matrix.identity(4, 4);
+	}
 	
 	/******************************************************************
 	*FOR 4D
