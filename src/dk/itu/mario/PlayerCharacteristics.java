@@ -31,4 +31,20 @@ public class PlayerCharacteristics {
 		return temp;
 	}
 
+	public static int getCoins() {
+		int coinsCollected = dr.getCoinsCollected();
+		return coinsCollected;
+	}
+
+	public static int getSpeed() {
+		int timeRan = dr.getTimesRun();
+		return timeRan;
+	}
+
+	public static int getJumps() {
+		int jumps = dr.getTimesJumped();
+		return jumps;
+	}
+	
+
 }
