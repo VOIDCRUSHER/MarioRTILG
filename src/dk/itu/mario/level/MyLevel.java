@@ -2,6 +2,7 @@ package dk.itu.mario.level;
 
 import java.util.Random;
 
+import dk.itu.mario.PlayerCharacteristics;
 import dk.itu.mario.MarioInterface.Constraints;
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.MarioInterface.LevelInterface;
@@ -141,7 +142,7 @@ public class MyLevel extends Level {
 		int js = random.nextInt(4) + 2;
 		int jl = random.nextInt(2) + 2;
 		int length = js * 2 + jl;
-		
+
 		boolean hasStairs = random.nextInt(4) == 0;
 
 		int floor = height - 1 - random.nextInt(4);
@@ -393,7 +394,7 @@ public class MyLevel extends Level {
 		int length = random.nextInt(10) + 5;
 		if (length > maxLength)
 			length = maxLength;
-		
+
 		int floor = height - 1 - random.nextInt(4);
 		int xTube = xo + 1 + random.nextInt(4);
 		int tubeHeight = floor - random.nextInt(2) - 2;
@@ -433,7 +434,9 @@ public class MyLevel extends Level {
 
 		return length;
 	}
+
 	public int buildTubesCustom(int xo, int maxLength) {
+		System.out.println("PC: " + PlayerCharacteristics.getJumps());
 		int length = random.nextInt(10) + 5;
 		if (length > maxLength)
 			length = maxLength;
