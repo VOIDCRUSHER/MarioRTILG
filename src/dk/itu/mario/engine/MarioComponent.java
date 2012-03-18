@@ -111,15 +111,17 @@ public class MarioComponent extends JComponent implements Runnable,
 			for (int i = 0; i < this.randomLevel.level.getMap().length; i++)
 				for (int j = 0; j < this.randomLevel.level.getMap()[i].length; j++)
 					// this.randomLevel.level.setBlock(i, 200, (byte) 0);
-					this.randomLevel.level.getMap()[i][10] = Level.HILL_FILL;
+					;// this.randomLevel.level.getMap()[i][10] =
+						// Level.HILL_FILL;
 
 			// byte[][] temp = this.randomLevel.level.getMap();
 			int x = 0;
+			this.randomLevel.mario.x = 0;
 		}
 		if (isPressed && keyCode == KeyEvent.VK_C) {
 			System.out.println("C was pressed");
 			((MyLevel) this.randomLevel.level).clear(10, 1);
-			count+=100;
+			count += 100;
 		}
 		if (isPressed && keyCode == KeyEvent.VK_ESCAPE) {
 			try {

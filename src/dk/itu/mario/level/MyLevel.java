@@ -41,12 +41,12 @@ public class MyLevel extends Level {
 		// create all of the medium sections
 		while (length < width - 64) {
 			// length += buildZone(length, width - length);
-			length += buildStraight(length, width - length, false);
-			length += buildStraight(length, width - length, false);
-			length += buildHillStraight(length, width - length);
-			length += buildJump(length, width - length);
-			length += buildTubes(length, width - length);
-			length += buildCannons(length, width - length);
+			length += buildStraightCustom(length, width - length, false);
+			length += buildStraightCustom(length, width - length, false);
+			// length += buildHillStraight(length, width - length);
+			// length += buildJump(length, width - length);
+			// length += buildTubes(length, width - length);
+			// length += buildCannons(length, width - length);
 		}
 
 		// set the end piece
@@ -238,9 +238,99 @@ public class MyLevel extends Level {
 		return length;
 	}
 
+	protected int buildHillStraightCustom(int xo, int maxLength) {
+		int length = random.nextInt(10) + 10;
+		if (length > maxLength)
+			length = maxLength;
+
+		int floor = height - 1 - random.nextInt(4);
+		for (int x = xo; x < xo + length; x++) {
+			for (int y = 0; y < height; y++) {
+				if (y >= floor) {
+					setBlock(x, y, GROUND);
+				}
+			}
+		}
+
+		addEnemyLine(xo + 1, xo + length - 1, floor - 1);
+
+		int h = floor;
+
+		boolean keepGoing = true;
+
+		boolean[] occupied = new boolean[length];
+		while (keepGoing) {
+			h = h - 2 - random.nextInt(3);
+
+			if (h <= 0) {
+				keepGoing = false;
+			} else {
+				int l = random.nextInt(5) + 3;
+				int xxo = random.nextInt(length - l - 2) + xo + 1;
+
+				if (occupied[xxo - xo] || occupied[xxo - xo + l]
+						|| occupied[xxo - xo - 1] || occupied[xxo - xo + l + 1]) {
+					keepGoing = false;
+				} else {
+					occupied[xxo - xo] = true;
+					occupied[xxo - xo + l] = true;
+					addEnemyLine(xxo, xxo + l, h - 1);
+					if (random.nextInt(4) == 0) {
+						decorateCustom(xxo - 1, xxo + l + 1, h);
+						keepGoing = false;
+					}
+					for (int x = xxo; x < xxo + l; x++) {
+						for (int y = h; y < floor; y++) {
+							int xx = 5;
+							if (x == xxo)
+								xx = 4;
+							if (x == xxo + l - 1)
+								xx = 6;
+							int yy = 9;
+							if (y == h)
+								yy = 8;
+
+							if (getBlock(x, y) == 0) {
+								setBlock(x, y, (byte) (xx + yy * 16));
+							} else {
+								if (getBlock(x, y) == HILL_TOP_LEFT)
+									setBlock(x, y, HILL_TOP_LEFT_IN);
+								if (getBlock(x, y) == HILL_TOP_RIGHT)
+									setBlock(x, y, HILL_TOP_RIGHT_IN);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return length;
+	}
+
 	protected void addEnemyLine(int x0, int x1, int y) {
 		for (int x = x0; x < x1; x++) {
 			if (random.nextInt(35) < difficulty + 1) {
+				int type = random.nextInt(4);
+				// System.out.println("addi: " + difficulty);
+
+				if (difficulty < 1) {
+					type = Enemy.ENEMY_GOOMBA;
+				} else if (difficulty < 3) {
+					type = random.nextInt(3);
+				}
+
+				setSpriteTemplate(x, y,
+						new SpriteTemplate(type,
+								random.nextInt(35) < difficulty));
+				ENEMIES++;
+			}
+		}
+	}
+
+	protected void addEnemyLineCustom(int x0, int x1, int y, int var) {
+		for (int x = x0; x < x1; x++) {
+
+			if (random.nextInt(var) < difficulty + 1) {
 				int type = random.nextInt(4);
 
 				if (difficulty < 1) {
@@ -330,7 +420,34 @@ public class MyLevel extends Level {
 
 		return length;
 	}
+	protected int buildStraightCustom(int xo, int maxLength, boolean safe) {
+		int length = random.nextInt(10) + 2;
 
+		if (safe)
+			length = 10 + random.nextInt(5);
+
+		if (length > maxLength)
+			length = maxLength;
+
+		int floor = height - 1 - random.nextInt(4);
+
+		// runs from the specified x position to the length of the segment
+		for (int x = xo; x < xo + length; x++) {
+			for (int y = 0; y < height; y++) {
+				if (y >= floor) {
+					setBlock(x, y, GROUND);
+				}
+			}
+		}
+
+		if (!safe) {
+			if (length > 5) {
+				decorateCustom(xo, xo + length, floor);
+			}
+		}
+
+		return length;
+	}
 	protected void decorate(int xStart, int xLength, int floor) {
 		// if its at the very top, just return
 		if (floor < 1)
@@ -356,6 +473,65 @@ public class MyLevel extends Level {
 
 		s = random.nextInt(4);
 		e = random.nextInt(4);
+
+		// this fills the set of blocks and the hidden objects inside them
+		if (floor - 4 > 0) {
+			if ((xLength - 1 - e) - (xStart + 1 + s) > 2) {
+				for (int x = xStart + 1 + s; x < xLength - 1 - e; x++) {
+					if (rocks) {
+						if (x != xStart + 1 && x != xLength - 2
+								&& random.nextInt(3) == 0) {
+							if (random.nextInt(4) == 0) {
+								setBlock(x, floor - 4, BLOCK_POWERUP);
+								BLOCKS_POWER++;
+							} else { // the fills a block with a hidden coin
+								setBlock(x, floor - 4, BLOCK_COIN);
+								BLOCKS_COINS++;
+							}
+						} else if (random.nextInt(4) == 0) {
+							if (random.nextInt(4) == 0) {
+								setBlock(x, floor - 4, (byte) (2 + 1 * 16));
+							} else {
+								setBlock(x, floor - 4, (byte) (1 + 1 * 16));
+							}
+						} else {
+							setBlock(x, floor - 4, BLOCK_EMPTY);
+							BLOCKS_EMPTY++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void decorateCustom(int xStart, int xLength, int floor) {
+		// if its at the very top, just return
+		if (floor < 1)
+			return;
+
+		// boolean coins = random.nextInt(3) == 0;
+		boolean rocks = true;
+
+		// add an enemy line above the box
+		addEnemyLineCustom(xStart + 1, xLength - 1, floor - 1, 100);
+		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+
+		int s = 3;// = random.nextInt(4);
+		int e = 3;// = random.nextInt(4);
+
+		if (floor - 2 > 0) {
+			if ((xLength - 1 - e) - (xStart + 1 + s) > 1) {
+				for (int x = xStart + 1 + s; x < xLength - 1 - e; x++) {
+					setBlock(x, floor - 2, COIN);
+					COINS++;
+				}
+			}
+		}
+
+		s = 3;// random.nextInt(4);
+		e = 3;// random.nextInt(4);
 
 		// this fills the set of blocks and the hidden objects inside them
 		if (floor - 4 > 0) {
@@ -501,11 +677,11 @@ public class MyLevel extends Level {
 	}
 
 	public void clear(int xo, int maxLength) {
-		for (int j = xo; j < maxLength+xo; j++)
+		for (int j = xo; j < maxLength + xo; j++)
 			for (int i = 0; i < this.getMap()[0].length; i++)
 				this.getMap()[j][i] = LevelInterface.TYPE_OVERGROUND;
 		SpriteTemplate[][] st = this.getSpriteTemplate();
-		for (int i = xo; i < maxLength+xo; i++)
+		for (int i = xo; i < maxLength + xo; i++)
 			for (int j = 0; j < this.getSpriteTemplate()[0].length; j++)
 				this.getSpriteTemplate()[i][j] = null;
 	}
