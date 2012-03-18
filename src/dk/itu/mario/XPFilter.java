@@ -9,53 +9,32 @@ public class XPFilter {
 	private Matrix u; // external motion - motion vector
 	private Matrix F; // next state function - state transition matrix
 	private Matrix H; // measurement function 
-	private Matrix R; // measurement uncertainty
+	private Matrix R; // measurement uncertainty - noise
 	private Matrix I; // identity matrix
 	//filter(x,P)
-	public XPFilter(){
-		//Assume 4x4 
-		//R = Matrix()
-		I = Matrix.identity(4, 4);
+	public XPFilter(int observedVarSize, int hiddenVarSize){
+		int m = observedVarSize, n = hiddenVarSize; 
+		x = new Matrix(m,1);
+		u = new Matrix(m+n,1);
+		P = new Matrix(m+n,m+n);
+		F = new Matrix(m+n, m+n);
+		H = Matrix.identity(m,m+n);
+		R = new Matrix(m,m);
+		I = Matrix.identity(m+n, m+n);
 	}
 	
 	/******************************************************************
-	*FOR 4D
-	*
-	print "### 4-dimensional example ###"
+	*FOR N Dimensional 	
 
-	measurements = [[5., 10.], [6., 8.], [7., 6.], [8., 4.], [9., 2.], [10., 0.]]
-	initial_xy = [4., 12.]
-
-	# measurements = [[1., 4.], [6., 0.], [11., -4.], [16., -8.]]
-	# initial_xy = [-4., 8.]
-
-	# measurements = [[1., 17.], [1., 15.], [1., 13.], [1., 11.]]
-	# initial_xy = [1., 19.]
-
-	dt = 0.1
-
-	x = matrix([[initial_xy[0]], [initial_xy[1]], [0.], [0.]]) # initial state (location and velocity)
-	u = matrix([[0.], [0.], [0.], [0.]]) # external motion
-
-	#### DO NOT MODIFY ANYTHING ABOVE HERE ####
-	#### fill this in, remember to use the matrix() function!: ####
-
-	P = matrix([[0,0,0,0],[0,0,0,0],[0,0,1000,0],[0,0,0,1000]]) # initial uncertainty
-	F = matrix([[1,0,dt,0],[0,1,0,dt],[0,0,1,0],[0,0,0,1]]) # next state function
-	H = matrix([[1,0,0,0],[0,1,0,0]]) # measurement function
-	R = matrix([[.1,0],[0,.1]]) # measurement uncertainty
-	I = matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]) # identity matrix
+	
 	*/
 	
-	public void init(Matrix initState, Matrix initSig){
-		
-		//x = matrix([[initial_xy[0]], [initial_xy[1]], [0.], [0.]]); // initial state (location and velocity)
-		//u = matrix([[0.], [0.], [0.], [0.]]); // external motion
-		//P = matrix([[0,0,0,0],[0,0,0,0],[0,0,1000,0],[0,0,0,1000]]); // initial uncertainty
-		//F = matrix([[1,0,dt,0],[0,1,0,dt],[0,0,1,0],[0,0,0,1]]); // next state function
-		//H = matrix([[1,0,0,0],[0,1,0,0]]); // measurement function
-		//R = matrix([[.1,0],[0,.1]]); // measurement uncertainty
-		//I = matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]); // identity matrix
+	public void init(Matrix initState, Matrix initSig, Matrix noise, Matrix transitionMatrix){
+		x = initState;
+		F = transitionMatrix;
+		//must be passed in as mx1 matrices
+		for(int i=0;i<P.getRowDimension();i++){ P.set(i, i, initSig.get(i, 1));}
+		for(int i=0;i<R.getRowDimension();i++){R.set(i, i, noise.get(i, 1));}
 	}
 	
 	
@@ -80,7 +59,8 @@ public class XPFilter {
         //P = F * P * F.transpose()
 		x = (F.times(x)).plus(u);
 		P = F.times(P).times(F.transpose());
-		return P;
+		
+		return x.copy();
 	}
 	
 }
