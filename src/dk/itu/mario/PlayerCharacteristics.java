@@ -3,6 +3,7 @@
  */
 package dk.itu.mario;
 
+import Jama.Matrix;
 import dk.itu.mario.engine.DataRecorder;
 
 /**
@@ -11,12 +12,28 @@ import dk.itu.mario.engine.DataRecorder;
  */
 public class PlayerCharacteristics {
 	static private DataRecorder dr;
+	static Matrix test;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+	}
+
+	public static void setUpMatrix() {
+
+		test = new Matrix(10, 1);
+		// enemies, coins, speed, jumps, bumped bricks
+		test.set(0, 0, dr.getNumKills());
+		test.set(1, 0, dr.getCoinsCollected());
+		test.set(2, 0, dr.getTotalRunTime());
+		test.set(3, 0, dr.getTimesJumped());
+		test.set(
+				4,
+				0,
+				dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed()
+						+ dr.getBlocksPowerDestroyed());
 
 	}
 
@@ -45,6 +62,5 @@ public class PlayerCharacteristics {
 		int jumps = dr.getTimesJumped();
 		return jumps;
 	}
-	
 
 }
