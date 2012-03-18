@@ -46,7 +46,7 @@ public class MarioComponent extends JComponent implements Runnable,
 	private boolean focused = false;
 	private boolean useScale2x = false;
 	private boolean isCustom = false;
-
+	private int renderPastThisPoint = 5 * 16;
 	private Scale2x scale2x = new Scale2x(320, 240);
 
 	private double openTime;
@@ -107,16 +107,28 @@ public class MarioComponent extends JComponent implements Runnable,
 		}
 		if (isPressed && keyCode == KeyEvent.VK_P) {
 			System.out.println("P was pressed");
+			// System.out.println(this.randomLevel.mario.x);
+			this.randomLevel.mario.y = 10;
 
-			for (int i = 0; i < this.randomLevel.level.getMap().length; i++)
-				for (int j = 0; j < this.randomLevel.level.getMap()[i].length; j++)
-					// this.randomLevel.level.setBlock(i, 200, (byte) 0);
-					;// this.randomLevel.level.getMap()[i][10] =
-						// Level.HILL_FILL;
+			// ((MyLevel) this.randomLevel.level).clear(0, 10);
+			// ((MyLevel) this.randomLevel.level).buildStraightCustom(0, 10,
+			// true);
+			// ((MyLevel) this.randomLevel.level).fixWallsCustom(0, 10);
+
+			// ((MyLevel) this.randomLevel.level).buildHillStraightCustom(0,
+			// 10);
+
+			// for (int i = 0; i < this.randomLevel.level.getMap().length; i++)
+			// for (int j = 0; j < this.randomLevel.level.getMap()[i].length;
+			// j++)
+			// this.randomLevel.level.setBlock(i, 200, (byte) 0);
+			;// this.randomLevel.level.getMap()[i][10] =
+				// Level.HILL_FILL;
 
 			// byte[][] temp = this.randomLevel.level.getMap();
 			int x = 0;
-			this.randomLevel.mario.x = 0;
+
+			System.out.println(this.randomLevel.mario.x);// = 0;
 		}
 		if (isPressed && keyCode == KeyEvent.VK_C) {
 			System.out.println("C was pressed");
@@ -162,7 +174,6 @@ public class MarioComponent extends JComponent implements Runnable,
 		VolatileImage image = createVolatileImage(320, 240);
 		Graphics g = getGraphics();
 		Graphics og = image.getGraphics();
-
 		int lastTick = -1;
 		int renderedFrames = 0;
 		int fps = 0;
@@ -183,6 +194,8 @@ public class MarioComponent extends JComponent implements Runnable,
 		if (System.getProperty("os.name") == "Mac OS X")
 			;
 		while (running) {
+			Art.stopMusic();
+
 			float lastTime = time;
 			time = (System.nanoTime() - startTime) / 1000000000f;
 			float passedTime = time - lastTime;
@@ -224,7 +237,37 @@ public class MarioComponent extends JComponent implements Runnable,
 
 			og.setColor(Color.WHITE);
 			og.fillRect(0, 0, 320, 240);
+			// ADDING STUFF TO AUTORENDER
+			int marioX = (int) this.randomLevel.mario.x;
+			if (marioX >= 280 * 16) {
+				this.randomLevel.mario.x = 0;
+				this.randomLevel.mario.y = 10;
+				this.renderPastThisPoint = 20 * 16;
+			}
+			if (this.randomLevel.mario.x < 16 * 5)
+				this.renderPastThisPoint = 16 * 5;
+			if (marioX >= this.renderPastThisPoint) {
+				System.out.println("Current: " + this.randomLevel.mario.x);
+				int temp = this.renderPastThisPoint;
+				int numOfTiles = 20;
+				while (this.renderPastThisPoint - temp < numOfTiles * 16) {
+					((MyLevel) this.randomLevel.level).clear(
+							(int) renderPastThisPoint / 16 + numOfTiles,
+							numOfTiles);
+					int tempBuff = 16 * ((MyLevel) this.randomLevel.level)
+							.buildTubesCustom((int) renderPastThisPoint / 16
+									+ numOfTiles, numOfTiles);
 
+					((MyLevel) this.randomLevel.level).fixWallsCustom(
+							(int) renderPastThisPoint / 16 + numOfTiles,
+							numOfTiles);
+					this.renderPastThisPoint += tempBuff;
+
+				}
+
+				System.out.println("CHANGES MADE");
+			}
+			//
 			scene.render(og, alpha);
 
 			if (!this.hasFocus() && tick / 4 % 2 == 0) {
