@@ -33,8 +33,8 @@ public class XPFilter {
 		x = initState;
 		F = transitionMatrix;
 		//must be passed in as mx1 matrices
-		for(int i=0;i<P.getRowDimension();i++){ P.set(i, i, initSig.get(i, 1));}
-		for(int i=0;i<R.getRowDimension();i++){R.set(i, i, noise.get(i, 1));}
+		for(int i=0;i<P.getRowDimension();i++){ P.set(i, i, initSig.get(i, 0));}
+		for(int i=0;i<R.getRowDimension();i++){R.set(i, i, noise.get(i, 0));}
 	}
 	
 	
@@ -48,7 +48,7 @@ public class XPFilter {
         //x = x + (K * y)
         //P = (I - (K * H)) * P
 		Z = measurement;
-		y = Z.transpose().minus(H.times(x));
+		y = Z.minus(H.times(x));
 		S = H.times(P).times(H.transpose()).minus(R);
 		K = P.times(H.transpose()).times(S.inverse());
 		x = x.plus(K.times(y));
