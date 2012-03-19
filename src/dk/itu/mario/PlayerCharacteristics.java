@@ -47,7 +47,11 @@ public class PlayerCharacteristics {
 		initState.set(2, 0, dr.getTotalRunTime());
 		initState.set(3, 0, dr.getTimesJumped());
 		initState.set(4, 0, dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed() + dr.getBlocksPowerDestroyed());
-
+		initState.set(5, 0, .2);
+		initState.set(6, 0, .2);
+		initState.set(7, 0, .2);
+		initState.set(8, 0, .2);
+		initState.set(9, 0, .2);
 	}
 
 	public static void update() {
