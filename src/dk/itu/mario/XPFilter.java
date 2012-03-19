@@ -50,7 +50,6 @@ public class XPFilter {
 		Z = measurement;
 		y = Z.minus(H.times(x));
 		S = H.times(P).times(H.transpose()).minus(R);
-		//System.out.println(S);
 		K = P.times(H.transpose()).times(S.inverse());
 		x = x.plus(K.times(y));
 		P = I.minus(K.times(H)).times(P);
