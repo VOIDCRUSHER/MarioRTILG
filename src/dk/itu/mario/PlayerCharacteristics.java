@@ -12,28 +12,70 @@ import dk.itu.mario.engine.DataRecorder;
  */
 public class PlayerCharacteristics {
 	static private DataRecorder dr;
-	static Matrix test;
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	static Matrix initState;
+	static Matrix initUncertainty;
+	static Matrix sampleNoise;
+	static Matrix transitionMatrix;
+	static XPFilter kfilter;
+	private int observedVars = 5, hiddenVars = 5;
+	
+	public PlayerCharacteristics(){  }
+	
+	public void initFilter(){
+		setUpInitState();
+		setUpUncertainty();
+		setUpNoise();
+		setUpTransitionMatrix();
+		kfilter = new XPFilter(5,5);
+		kfilter.init(initState, initUncertainty, sampleNoise, transitionMatrix);		
 	}
-
-	public static void setUpMatrix() {
-
-		test = new Matrix(10, 1);
+	
+	public static void setUpInitState() {
+		//set up initial state vector x
+		initState = new Matrix(10, 1);
 		// enemies, coins, speed, jumps, bumped bricks
-		test.set(0, 0, dr.getNumKills());
-		test.set(1, 0, dr.getCoinsCollected());
-		test.set(2, 0, dr.getTotalRunTime());
-		test.set(3, 0, dr.getTimesJumped());
-		test.set(
-				4,
-				0,
-				dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed()
-						+ dr.getBlocksPowerDestroyed());
+		initState.set(0, 0, dr.getNumKills());
+		initState.set(1, 0, dr.getCoinsCollected());
+		initState.set(2, 0, dr.getTotalRunTime());
+		initState.set(3, 0, dr.getTimesJumped());
+		initState.set(4,	0, dr.getBlocksCoinDestroyed() 
+					 + dr.getBlocksEmptyDestroyed()
+					 + dr.getBlocksPowerDestroyed());
+
+	}
+	
+	public static void setUpUncertainty() {
+		//set up initial uncertaintyVals for P
+		double[][] uncertaintyVals = new double[][]{
+				{0},{0},{0},{0},{0},
+				{1000},{1000},{1000},{1000},{1000}				
+		};
+		initUncertainty = new Matrix(uncertaintyVals);
+
+	}
+	
+	public static void setUpNoise() {
+		//set up noise constants for measurement samples for R
+		double[][] noiseVals = new double[][]{{0},{0},{0},{0},{0}};
+		sampleNoise = new Matrix(noiseVals);
+
+	}
+	
+	public static void setUpTransitionMatrix() {
+		//initialize transitionMatrix F
+		double[][] F = new double[][]{
+				{1,0,0,0,0,0,0,0,0,0},
+				{0,1,0,0,0,0,0,0,0,0},
+				{0,0,1,0,0,0,0,0,0,0},
+				{0,0,0,1,0,0,0,0,0,0},
+				{0,0,0,0,1,0,0,0,0,0},
+				{0,0,0,0,0,1,0,0,0,0},
+				{0,0,0,0,0,0,1,0,0,0},
+				{0,0,0,0,0,0,0,1,0,0},
+				{0,0,0,0,0,0,0,0,1,0},
+				{0,0,0,0,0,0,0,0,0,1},
+									  };
+		transitionMatrix = new Matrix(F);
 
 	}
 

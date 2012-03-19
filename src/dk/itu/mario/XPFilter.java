@@ -38,7 +38,7 @@ public class XPFilter {
 	}
 	
 	
-	public Matrix filter(Matrix measurement){
+	public Matrix sample(Matrix measurement){
 		//measurement update
 		Matrix Z,y,S,K;
 		// Z = matrix([measurements[n]])
