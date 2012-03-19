@@ -110,7 +110,8 @@ public class MarioComponent extends JComponent implements Runnable,
 			System.out.println("P was pressed");
 			// System.out.println(this.randomLevel.mario.x);
 			// this.randomLevel.mario.y = 10;
-			System.out.println(PlayerCharacteristics.getEnemies());
+			//System.out.println(PlayerCharacteristics.getCoins());
+			PlayerCharacteristics.getCoins();
 			// ((MyLevel) this.randomLevel.level).clear(0, 10);
 			// ((MyLevel) this.randomLevel.level).buildStraightCustom(0, 10,
 			// true);
@@ -129,7 +130,7 @@ public class MarioComponent extends JComponent implements Runnable,
 			// byte[][] temp = this.randomLevel.level.getMap();
 			int x = 0;
 
-			System.out.println(this.randomLevel.mario.x);// = 0;
+			//System.out.println(this.randomLevel.mario.x);// = 0;
 		}
 		if (isPressed && keyCode == KeyEvent.VK_C) {
 			System.out.println("C was pressed");
@@ -248,7 +249,7 @@ public class MarioComponent extends JComponent implements Runnable,
 			if (this.randomLevel.mario.x < 16 * 5)
 				this.renderPastThisPoint = 16 * 5;
 			if (marioX >= this.renderPastThisPoint) {
-				System.out.println("Current: " + this.randomLevel.mario.x);
+				//System.out.println("Current: " + this.randomLevel.mario.x);
 				int temp = this.renderPastThisPoint;
 				int numOfTiles = 20;
 				while (this.renderPastThisPoint - temp < numOfTiles * 16) {
