@@ -46,11 +46,7 @@ public class PlayerCharacteristics {
 		initState.set(1, 0, dr.getCoinsCollected());
 		initState.set(2, 0, dr.getTotalRunTime());
 		initState.set(3, 0, dr.getTimesJumped());
-		initState.set(
-				4,
-				0,
-				dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed()
-						+ dr.getBlocksPowerDestroyed());
+		initState.set(4, 0, dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed() + dr.getBlocksPowerDestroyed());
 
 	}
 
@@ -64,19 +60,15 @@ public class PlayerCharacteristics {
 		measureMatrix.set(1, 0, dr.getCoinsCollected());
 		measureMatrix.set(2, 0, dr.getTotalRunTime());
 		measureMatrix.set(3, 0, dr.getTimesJumped());
-		measureMatrix.set(
-				4,
-				0,
-				dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed()
-						+ dr.getBlocksPowerDestroyed());
+		measureMatrix.set(4,0,	dr.getBlocksCoinDestroyed() + dr.getBlocksEmptyDestroyed()+ dr.getBlocksPowerDestroyed());
 		sampleMatrix = kfilter.sample(measureMatrix);
 
 	}
 
 	public static void setUpUncertainty() {
 		// set up initial uncertaintyVals for P
-		double[][] uncertaintyVals = new double[][] { { 0 }, { 0 }, { 0 },
-				{ 0 }, { 0 }, { 1000 }, { 1000 }, { 1000 }, { 1000 }, { 1000 } };
+		double[][] uncertaintyVals = new double[][] { { 0.01 }, { 0.01 }, { 0.01 },
+				{ 0.01 }, { .01 }, { 1000 }, { 1000 }, { 1000 }, { 1000 }, { 1000 } };
 		initUncertainty = new Matrix(uncertaintyVals);
 
 	}
@@ -91,7 +83,8 @@ public class PlayerCharacteristics {
 
 	public static void setUpTransitionMatrix() {
 		// initialize transitionMatrix F
-		double[][] F = new double[][] { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		double[][] F = new double[][] { 
+				{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
@@ -100,7 +93,7 @@ public class PlayerCharacteristics {
 				{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 }, };
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } };
 		//transitionMatrix = new Matrix(F);
 		transitionMatrix = Matrix.random(10, 10);
 
@@ -116,7 +109,7 @@ public class PlayerCharacteristics {
 		update();
 
 		// int temp = dr.getNumKills();
-		System.out.println(measureMatrix.get(5, 0));
+		System.out.println("Enemy prediction"+sampleMatrix.get(5, 0));
 		return 0;
 	}
 
