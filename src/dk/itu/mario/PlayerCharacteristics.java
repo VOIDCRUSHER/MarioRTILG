@@ -21,6 +21,7 @@ public class PlayerCharacteristics {
 	static Matrix measureMatrix;
 	static boolean hasInit = false;
 	static Matrix sampleMatrix;
+	static int[] lastValues;
 
 	public PlayerCharacteristics() {
 	}
@@ -100,8 +101,8 @@ public class PlayerCharacteristics {
 		// initialize transitionMatrix F
 
 		double[][] F = new double[][] { { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-
-		{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 1, 0, 0, 0, 0, dr.getCoinsCollected(), 0, 0, 0 },
+				{ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
@@ -125,7 +126,7 @@ public class PlayerCharacteristics {
 
 		// int temp = dr.getNumKills();
 
-		System.out.println("Enemy prediction: " + sampleMatrix.get(5, 0));
+		// System.out.println("Enemy prediction: " + sampleMatrix.get(5, 0));
 
 		return 0;
 	}
@@ -149,4 +150,32 @@ public class PlayerCharacteristics {
 		return jumps;
 	}
 
+	public static void saveLastValues() {
+		if (lastValues == null)
+			lastValues = new int[5];
+		lastValues[0] = dr.getNumKills();
+		lastValues[1] = dr.getCoinsCollected();
+		lastValues[2] = dr.getTotalJumpTime();
+		lastValues[3] = dr.getTotalRunTime();
+		lastValues[4] = dr.getBlocksCoinDestroyed()
+				+ dr.getBlocksEmptyDestroyed() + dr.getBlocksPowerDestroyed();
+	}
+
+	public static int[] getLastValues() {
+		if (lastValues != null)
+			return lastValues;
+		else
+			return new int[5];
+	}
+
+	public static int[] getCurrValues() {
+		int[] currValues = new int[5];
+		currValues[0] = dr.getNumKills();
+		currValues[1] = dr.getCoinsCollected();
+		currValues[2] = dr.getTotalJumpTime();
+		currValues[3] = dr.getTotalRunTime();
+		currValues[4] = dr.getBlocksCoinDestroyed()
+				+ dr.getBlocksEmptyDestroyed() + dr.getBlocksPowerDestroyed();
+		return currValues;
+	}
 }

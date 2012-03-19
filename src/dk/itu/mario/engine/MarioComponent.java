@@ -26,9 +26,11 @@ import dk.itu.mario.scene.LoseScene;
 import dk.itu.mario.scene.Scene;
 import dk.itu.mario.scene.WinScene;
 
+import dk.itu.mario.MarioInterface.LevelInterface;
 import dk.itu.mario.engine.sonar.FakeSoundEngine;
 import dk.itu.mario.engine.sonar.SonarSoundEngine;
 import dk.itu.mario.engine.sprites.Mario;
+import dk.itu.mario.engine.sprites.SpriteTemplate;
 
 public class MarioComponent extends JComponent implements Runnable,
 		KeyListener, FocusListener, MouseListener {
@@ -106,11 +108,24 @@ public class MarioComponent extends JComponent implements Runnable,
 		if (keyCode == KeyEvent.VK_F1) {
 			useScale2x = !useScale2x;
 		}
+		if (keyCode == KeyEvent.VK_1)
+			weights[0] = 1;
+		if (keyCode == KeyEvent.VK_2)
+			weights[1] = 1;
+		if (keyCode == KeyEvent.VK_3)
+			weights[2] = 1;
+		if (keyCode == KeyEvent.VK_4)
+			weights[3] = 1;
+		if (keyCode == KeyEvent.VK_5)
+			weights[4] = 1;
+
 		if (isPressed && keyCode == KeyEvent.VK_P) {
 			System.out.println("P was pressed");
 			// System.out.println(this.randomLevel.mario.x);
 			// this.randomLevel.mario.y = 10;
-			System.out.println(PlayerCharacteristics.getEnemies());
+			for (int i = 0; i < weights.length; i++)
+				this.weights[i] = Math.random();
+			// System.out.println(PlayerCharacteristics.getEnemies());
 			// ((MyLevel) this.randomLevel.level).clear(0, 10);
 			// ((MyLevel) this.randomLevel.level).buildStraightCustom(0, 10,
 			// true);
@@ -167,6 +182,8 @@ public class MarioComponent extends JComponent implements Runnable,
 	}
 
 	public void run() {
+		for (int i = 0; i < weights.length; i++)
+			weights[i] = .5;
 
 		graphicsConfiguration = getGraphicsConfiguration();
 
@@ -194,6 +211,7 @@ public class MarioComponent extends JComponent implements Runnable,
 		float correction = 0f;
 		if (System.getProperty("os.name") == "Mac OS X")
 			;
+
 		while (running) {
 			Art.stopMusic();
 
@@ -248,17 +266,48 @@ public class MarioComponent extends JComponent implements Runnable,
 			if (this.randomLevel.mario.x < 16 * 5)
 				this.renderPastThisPoint = 16 * 5;
 			if (marioX >= this.renderPastThisPoint) {
-				System.out.println("Current: " + this.randomLevel.mario.x);
-				int temp = this.renderPastThisPoint;
+				System.out.println("enem weights: " + this.weights[0]);
+				System.out.println("coin weight: " + this.weights[1]);
+				System.out.println("jump weight: " + this.weights[2]);
+				System.out.println("run weight: " + this.weights[3]);
+
+				System.out.println("blocks weight: " + this.weights[4]);
+
 				int numOfTiles = 20;
+
+				int[] lastValues = PlayerCharacteristics.getLastValues();
+				int[] currValues = PlayerCharacteristics.getCurrValues();
+				if (marioX > 16 * 30)
+					determineWeights(currValues, lastValues,
+							renderPastThisPoint / 16 - numOfTiles);
+				this.randomLevel.level.weights = weights;
+				PlayerCharacteristics.saveLastValues();
+				// System.out.println("Current: " + this.randomLevel.mario.x);
+				int temp = this.renderPastThisPoint;
+				int random = 0;
+				Random rand = new Random();
 				while (this.renderPastThisPoint - temp < numOfTiles * 16) {
+					random = rand.nextInt(3);
+					if (weights[2] > .8 && weights[0] > .8)
+						random = rand.nextInt(4);
 					((MyLevel) this.randomLevel.level).clear(
 							(int) renderPastThisPoint / 16 + numOfTiles,
 							numOfTiles);
-					int tempBuff = 16 * ((MyLevel) this.randomLevel.level)
-							.buildTubesCustom((int) renderPastThisPoint / 16
-									+ numOfTiles, numOfTiles);
 
+					int tempBuff = 0;
+					if (random == 0)
+						tempBuff = 16 * ((MyLevel) this.randomLevel.level)
+								.buildHillStraightCustom(
+										(int) renderPastThisPoint / 16
+												+ numOfTiles, numOfTiles);
+					else if ((random == 1) || (random == 2))
+						tempBuff = 16 * ((MyLevel) this.randomLevel.level)
+								.buildStraightCustom((int) renderPastThisPoint
+										/ 16 + numOfTiles, numOfTiles, false);
+					else if (random == 3)
+						tempBuff = 16 * ((MyLevel) this.randomLevel.level)
+								.buildTubesCustom((int) renderPastThisPoint
+										/ 16 + numOfTiles, numOfTiles);
 					((MyLevel) this.randomLevel.level).fixWallsCustom(
 							(int) renderPastThisPoint / 16 + numOfTiles,
 							numOfTiles);
@@ -300,6 +349,73 @@ public class MarioComponent extends JComponent implements Runnable,
 		}
 
 		Art.stopMusic();
+	}
+
+	double[] weights = new double[5];
+
+	private void determineWeights(int[] currValues, int[] lastValues, int xo) {
+		if (xo < 0)
+			return;
+		int expectedJumps = 4;
+		// kills, coins, jumped, 0, blocks
+		int[] coinsblocks = getDetails(xo);
+		int actualcoins = coinsblocks[0];
+		int actualblocks = coinsblocks[1];
+		int actualenems = getNumEnems(xo);
+
+		if ((currValues[0] - lastValues[0]) > 3 * actualenems / 4)
+			weights[0] = weights[0] * 1.2;
+		else if ((currValues[0] - lastValues[0]) < 1 * actualenems / 4)
+			weights[0] = weights[0] * .8;
+		if ((currValues[1] - lastValues[1]) > 3 * actualcoins / 4)
+			weights[1] = weights[1] * 1.2;
+		else if ((currValues[1] - lastValues[1]) < 1 * actualcoins / 4)
+			weights[1] = weights[1] * .8;
+
+		double jumpWeight = 1;
+		if (currValues[3] - lastValues[3] > 1)
+			jumpWeight = .8;
+
+		jumpWeight = .1;
+		if ((currValues[2] - lastValues[2]) > 1 * jumpWeight)
+			weights[2] = weights[2] * 1.2;
+		else if ((currValues[1] - lastValues[1]) < .5 * jumpWeight)
+			weights[2] = weights[2] * .8;
+		weights[2] = 1;
+		for (int i = 0; i < weights.length; i++) {
+			if (weights[i] > .9)
+				weights[i] = .9;
+			if (weights[i] < .1)
+				weights[i] = .1;
+		}
+	}
+
+	public int getNumEnems(int xo) {
+		int maxLength = 20;
+		int count = 0;
+		SpriteTemplate[][] st = randomLevel.level.getSpriteTemplate();
+		for (int i = xo; i < maxLength + xo; i++)
+			for (int j = 0; j < randomLevel.level.getSpriteTemplate()[0].length; j++)
+				if (randomLevel.level.getSpriteTemplate()[i][j] != null)
+					count++;
+		return count;
+	}
+
+	public int[] getDetails(int xo) {
+		int maxLength = 20;
+		int numCoins = 0;
+		int numBlocks = 0;
+		for (int j = xo; j < maxLength + xo; j++)
+			for (int i = 0; i < this.randomLevel.level.getMap()[0].length; i++) {
+				if (this.randomLevel.level.getMap()[j][i] == Level.COIN)
+					numCoins++;
+				byte[][] map = this.randomLevel.level.getMap();
+				if (map[j][i] == Level.BLOCK_COIN
+						| map[j][i] == Level.BLOCK_EMPTY
+						| map[j][i] == Level.BLOCK_POWERUP)
+					numBlocks++;
+			}
+		return new int[] { numCoins, numBlocks };
 	}
 
 	private void drawString(Graphics g, String text, int x, int y, int c) {

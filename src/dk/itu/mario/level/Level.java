@@ -12,12 +12,12 @@ import dk.itu.mario.engine.sprites.SpriteTemplate;
 public class Level implements LevelInterface
 {
 
-    protected static final byte BLOCK_EMPTY	= (byte) (0 + 1 * 16);
-    protected static final byte BLOCK_POWERUP	= (byte) (4 + 2 + 1 * 16);
-    protected static final byte BLOCK_COIN	= (byte) (4 + 1 + 1 * 16);
-    protected static final byte GROUND		= (byte) (1 + 9 * 16);
-    protected static final byte ROCK			= (byte) (9 + 0 * 16);
-    protected static final byte COIN			= (byte) (2 + 2 * 16);
+	public static final byte BLOCK_EMPTY	= (byte) (0 + 1 * 16);
+    public static final byte BLOCK_POWERUP	= (byte) (4 + 2 + 1 * 16);
+    public static final byte BLOCK_COIN	= (byte) (4 + 1 + 1 * 16);
+    public static final byte GROUND		= (byte) (1 + 9 * 16);
+    public static final byte ROCK			= (byte) (9 + 0 * 16);
+    public static final byte COIN			= (byte) (2 + 2 * 16);
 
 
     protected static final byte LEFT_GRASS_EDGE = (byte) (0+9*16);
@@ -75,6 +75,7 @@ public class Level implements LevelInterface
     protected int difficulty;
     protected int type;
 	protected int gaps;
+	public double[] weights = new double[5];
 
     public Level(){
 

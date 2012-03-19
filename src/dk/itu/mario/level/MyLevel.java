@@ -16,7 +16,6 @@ public class MyLevel extends Level {
 	// public int BLOCKS_COINS = 0; // the number of coin blocks
 	// public int BLOCKS_POWER = 0; // the number of power blocks
 	// public int COINS = 0; //These are the coins in boxes that Mario collect
-
 	public MyLevel(int width, int height) {
 		super(width, height);
 	}
@@ -286,7 +285,7 @@ public class MyLevel extends Level {
 		if (length > maxLength)
 			length = maxLength;
 		length = maxLength;
-		int floor = height - 1 - random.nextInt(4);
+		int floor = height - 1 - random.nextInt((int) (6));
 		for (int x = xo; x < xo + length; x++) {
 			for (int y = 0; y < height; y++) {
 				if (y >= floor) {
@@ -318,7 +317,7 @@ public class MyLevel extends Level {
 					occupied[xxo - xo] = true;
 					occupied[xxo - xo + l] = true;
 					addEnemyLine(xxo, xxo + l, h - 1);
-					if (random.nextInt(4) == 0) {
+					if (random.nextInt((int) (4 * 1 / weights[0])) == 0) {
 						decorateCustom(xxo - 1, xxo + l + 1, h);
 						keepGoing = false;
 					}
@@ -452,7 +451,7 @@ public class MyLevel extends Level {
 			if (xTube >= xo + length - 2)
 				xTube += 10;
 
-			if (x == xTube && random.nextInt(11) < difficulty + 1) {
+			if (x == xTube && random.nextInt(51 - (int) (weights[0] * 50)) < difficulty + 1) {
 				setSpriteTemplate(x, tubeHeight, new SpriteTemplate(
 						Enemy.ENEMY_FLOWER, false));
 				ENEMIES++;
@@ -511,6 +510,7 @@ public class MyLevel extends Level {
 	}
 
 	public int buildStraightCustom(int xo, int maxLength, boolean safe) {
+
 		if (maxLength == 0)
 			return 0;
 		int length = random.nextInt(maxLength) + 2;
@@ -604,15 +604,23 @@ public class MyLevel extends Level {
 
 		// boolean coins = random.nextInt(3) == 0;
 		boolean rocks = true;
-
 		// add an enemy line above the box
-		addEnemyLineCustom(xStart + 1, xLength - 1, floor - 1, 100);
+		addEnemyLineCustom(xStart + 1, xLength - 1, floor - 1,
+				51 - (int) (weights[0] * 50));
 		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 		// addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
-		int s = 3;// = random.nextInt(4);
-		int e = 3;// = random.nextInt(4);
+		int numCoins = random.nextInt(6);
+
+		if (weights[1] * 100 > 75)
+			numCoins = (int) (numCoins * 2);
+		else if (weights[1] * 100 < 25)
+			numCoins = (int) (numCoins * .5);
+
+		int s = (20 - numCoins) / 2;// middle - numCoins / 2;//
+									// random.nextInt(4);
+		int e = (20 - numCoins) / 2;// = random.nextInt(4);
 
 		if (floor - 2 > 0) {
 			if ((xLength - 1 - e) - (xStart + 1 + s) > 1) {
@@ -623,8 +631,15 @@ public class MyLevel extends Level {
 			}
 		}
 
-		s = 3;// random.nextInt(4);
-		e = 3;// random.nextInt(4);
+		int numBlocks = random.nextInt(6);
+
+		if (weights[4] * 100 > 75)
+			numBlocks = (int) (numCoins * 2);
+		else if (weights[4] * 100 < 25)
+			numBlocks = (int) (numCoins * .5);
+
+		s = (20 - numBlocks) / 2;// middle - numCoins / 2;// random.nextInt(4);
+		e = (20 - numBlocks) / 2;// = random.nextInt(4);
 
 		// this fills the set of blocks and the hidden objects inside them
 		if (floor - 4 > 0) {
