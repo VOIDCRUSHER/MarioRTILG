@@ -17,6 +17,7 @@ import java.util.Random;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 
+import dk.itu.mario.PlayerCharacteristics;
 import dk.itu.mario.level.Level;
 import dk.itu.mario.level.MyLevel;
 import dk.itu.mario.scene.LevelScene;
@@ -108,8 +109,8 @@ public class MarioComponent extends JComponent implements Runnable,
 		if (isPressed && keyCode == KeyEvent.VK_P) {
 			System.out.println("P was pressed");
 			// System.out.println(this.randomLevel.mario.x);
-			this.randomLevel.mario.y = 10;
-
+			// this.randomLevel.mario.y = 10;
+			System.out.println(PlayerCharacteristics.getEnemies());
 			// ((MyLevel) this.randomLevel.level).clear(0, 10);
 			// ((MyLevel) this.randomLevel.level).buildStraightCustom(0, 10,
 			// true);
